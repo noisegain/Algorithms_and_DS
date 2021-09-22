@@ -51,6 +51,8 @@ class Heap:
 
     def pop(self, i):
         i = self.i[i]
+        if i == -1:
+            return
         self.a[i], self.a[self.n] = self.a[self.n], self.a[i]
         self.i[self.a[i][1]] = i
         self.i[self.a[self.n][1]] = -1
@@ -67,11 +69,18 @@ class Heap:
         self.sift_down()
         return self.a[self.n + 1]
 
+    def change(self, i, v):
+        j = self.i[i]
+        if j == -1:
+            return
+        self.a[j] = (v, i)
+        self.sift_up(j)
+        self.sift_down(j)
+
 
 def heap_sort(a, reverse=False):
     h = Heap(a, reverse)
     return [h.pop_min() for _ in range(len(a))]
-
 
 
 class DoubleHeap():
@@ -93,6 +102,10 @@ class DoubleHeap():
         self.mn.insert(x)
         self.mx.insert(x)
 
+    def change(self, i, x):
+        self.mn.change(i, x)
+        self.mx.change(i, x)
+
 
 a = DoubleHeap()
 a.insert(1)
@@ -100,6 +113,7 @@ a.insert(2)
 a.insert(3)
 print(a.pop_max(), a.pop_min())
 a.insert(1)
-a.insert(0)
+a.insert(-1)
+a.change(4, 0)
 a.insert(100)
 print(a.pop_max(), a.pop_min())
